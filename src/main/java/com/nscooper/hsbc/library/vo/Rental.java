@@ -7,6 +7,8 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -33,4 +35,8 @@ public class Rental {
 
     @NotNull
     ZonedDateTime actualReturnedDate;
+
+    @Null
+    BigDecimal totalFee;
+
 }

@@ -17,7 +17,7 @@ public class BookRentalFee {
     private UUID id;
 
     @NotNull
-    @OneToOne(targetEntity=Book.class, fetch= FetchType.EAGER)
+    @ManyToOne(targetEntity=Book.class, fetch= FetchType.EAGER)
     private Book book;
 
     @NotNull
@@ -29,6 +29,43 @@ public class BookRentalFee {
     @NotNull
     private BigDecimal dailyFee;
 
-    @NotNull
-    private BigDecimal dailyLateReturnFee;
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public ZonedDateTime getFeeStartDate() {
+        return feeStartDate;
+    }
+
+    public void setFeeStartDate(ZonedDateTime feeStartDate) {
+        this.feeStartDate = feeStartDate;
+    }
+
+    public ZonedDateTime getFeeEndDate() {
+        return feeEndDate;
+    }
+
+    public void setFeeEndDate(ZonedDateTime feeEndDate) {
+        this.feeEndDate = feeEndDate;
+    }
+
+    public BigDecimal getDailyFee() {
+        return dailyFee;
+    }
+
+    public void setDailyFee(BigDecimal dailyFee) {
+        this.dailyFee = dailyFee;
+    }
 }
