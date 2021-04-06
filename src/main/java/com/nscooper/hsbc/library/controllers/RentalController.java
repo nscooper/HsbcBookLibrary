@@ -3,12 +3,13 @@ package com.nscooper.hsbc.library.controllers;
 import com.nscooper.hsbc.library.controllers.dto.BookDto;
 import com.nscooper.hsbc.library.controllers.dto.BookRentalFeeDto;
 import com.nscooper.hsbc.library.controllers.dto.CustomerDto;
+import com.nscooper.hsbc.library.controllers.dto.RentalDto;
 import com.nscooper.hsbc.library.exceptions.LibraryException;
-import com.nscooper.hsbc.library.services.MaintainPartiesService;
 import com.nscooper.hsbc.library.services.RentalService;
 import com.nscooper.hsbc.library.vo.Book;
 import com.nscooper.hsbc.library.vo.BookRentalFee;
 import com.nscooper.hsbc.library.vo.Customer;
+import com.nscooper.hsbc.library.vo.Rental;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -28,8 +31,6 @@ public class RentalController {
 
     @Autowired
     private RentalService rentalService;
-    @Autowired
-    private MaintainPartiesService maintainPartiesService;
 
     @ApiOperation("POST add a book to the library, including defining how many copies." +
             "If the book already exists, the number of copies will be increased.")
@@ -79,6 +80,17 @@ public class RentalController {
         return rentalService.getRentalFee(bookRentalFeeDto.getIsbn());
     }
 
+    @ApiOperation("POST get a book's rental fee from the library")
+    @PostMapping(consumes= APPLICATION_JSON_VALUE, produces=APPLICATION_JSON_VALUE,
+            path = "/getCurrentRentalFee")
+    public BookRentalFee getCurrentRentalFee(
+            @RequestBody BookRentalFeeDto bookRentalFeeDto,
+            final HttpServletRequest req) throws LibraryException {
+        logger.debug("Started /getCurrentRentalFee");
+
+        return rentalService.getCurrentRentalFee(bookRentalFeeDto.getIsbn());
+    }
+
     @ApiOperation("Add a customer to the library")
     @PostMapping(consumes= APPLICATION_JSON_VALUE, produces=APPLICATION_JSON_VALUE,
             path = "/addCustomer")
@@ -87,7 +99,7 @@ public class RentalController {
             final HttpServletRequest req) throws LibraryException {
         logger.debug("Started /addCustomer");
 
-        return maintainPartiesService.addCustomer(customerDto.getFirstName(),
+        return rentalService.addCustomer(customerDto.getFirstName(),
                 customerDto.getLastName());
     }
 
@@ -99,7 +111,52 @@ public class RentalController {
             final HttpServletRequest req) throws LibraryException {
         logger.debug("Started /getCustomer");
 
-        return maintainPartiesService.getCustomer(customerDto.getFirstName(),
+        return rentalService.getCustomer(customerDto.getFirstName(),
                 customerDto.getLastName());
+    }
+
+    @ApiOperation("add a rental transaction")
+    @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE,
+            path = "/addRental")
+    public Rental addRental(
+            @RequestBody RentalDto rentalDto,
+            final HttpServletRequest req) throws LibraryException {
+        logger.debug("Started /addRental");
+
+        Customer customer =
+                rentalService.getCustomer(rentalDto.getCustomerFirstName(), rentalDto.getCustomerLastName());
+
+        Book book = rentalService.getBook(rentalDto.getIsbn());
+        if (book.getTotalAvailableCopies()<1) {
+            throw new LibraryException(String.format("Book '%s' by %s is unavailable",book.getTitle(), book.getAuthor()));
+        }
+
+        ZonedDateTime endRentalDate = ZonedDateTime
+                .now()
+                .plusDays( Long.parseLong(rentalDto.getNumberOfDaysRental()) );
+        return rentalService.rentBook(customer, book, endRentalDate);
+    }
+
+    @ApiOperation("conclude a rental transaction by returning the book")
+    @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE,
+            path = "/endRental")
+    public Rental endRental(
+            @RequestBody RentalDto rentalDto,
+            final HttpServletRequest req) throws LibraryException {
+        logger.debug("Started /endRental");
+        return rentalService.returnBook(UUID.fromString(rentalDto.getRentalAgreementReference()));
+    }
+
+    @ApiOperation("get customers rentals")
+    @PostMapping(consumes= APPLICATION_JSON_VALUE, produces=APPLICATION_JSON_VALUE,
+            path = "/getRental")
+    public List<Rental> getRental(
+            @RequestBody RentalDto rentalDto,
+            final HttpServletRequest req) throws LibraryException {
+        logger.debug("Started /getRental");
+
+       return rentalService.getRentals(
+               rentalService.getCustomer(rentalDto.getCustomerFirstName(), rentalDto.getCustomerLastName()));
+
     }
 }

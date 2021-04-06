@@ -14,7 +14,10 @@
 /Users/nick/Documents/HsbcBookLibrary/src/main/java/com/nscooper/hsbc/library/services/MaintainPartiesService.java
 /Users/nick/Documents/HsbcBookLibrary/src/main/java/com/nscooper/hsbc/library/Application.java
 /Users/nick/Documents/HsbcBookLibrary/src/main/java/com/nscooper/hsbc/library/repo/RentalRepository.java
+/Users/nick/Documents/HsbcBookLibrary/src/main/java/com/nscooper/hsbc/library/controllers/dto/CustomerDto.java
 /Users/nick/Documents/HsbcBookLibrary/src/main/java/com/nscooper/hsbc/library/vo/Customer.java
+/Users/nick/Documents/HsbcBookLibrary/src/main/java/com/nscooper/hsbc/library/config/Configuration.java
 /Users/nick/Documents/HsbcBookLibrary/src/main/java/com/nscooper/hsbc/library/vo/Rental.java
+/Users/nick/Documents/HsbcBookLibrary/src/main/java/com/nscooper/hsbc/library/controllers/dto/RentalDto.java
 /Users/nick/Documents/HsbcBookLibrary/src/main/java/com/nscooper/hsbc/library/controllers/dto/ExceptionResponseDto.java
 /Users/nick/Documents/HsbcBookLibrary/src/main/java/com/nscooper/hsbc/library/repo/BookRepository.java

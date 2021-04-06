@@ -1,5 +1,6 @@
 package com.nscooper.hsbc.library.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
@@ -8,6 +9,8 @@ import javax.validation.constraints.Null;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.UUID;
+
+import static com.nscooper.hsbc.library.config.Configuration.DATETIME_PATTERN;
 
 @Entity
 @EnableAutoConfiguration
@@ -23,23 +26,26 @@ public class Rental {
     private UUID rentalAgreementReference;
 
     @NotNull
-    @OneToOne(targetEntity=Customer.class, fetch= FetchType.EAGER)
+    @ManyToOne(targetEntity=Customer.class, fetch= FetchType.EAGER)
     Customer customer;
 
     @NotNull
-    @OneToOne(targetEntity=Book.class, fetch= FetchType.EAGER)
+    @ManyToOne(targetEntity=Book.class, fetch= FetchType.EAGER)
     Book book;
 
     @NotNull
     @Column(name="RENTAL_START_DATE")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATETIME_PATTERN)
     ZonedDateTime rentalStartDate;
 
     @NotNull
     @Column(name="AGREED_RETURN_DATE")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATETIME_PATTERN)
     ZonedDateTime agreedReturnDate;
 
     @NotNull
     @Column(name="ACTUAL_RETURN_DATE")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATETIME_PATTERN)
     ZonedDateTime actualReturnedDate;
 
     @Null

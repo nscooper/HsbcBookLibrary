@@ -1,5 +1,6 @@
 package com.nscooper.hsbc.library.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Null;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.UUID;
+import static com.nscooper.hsbc.library.config.Configuration.DATETIME_PATTERN;
 
 @Entity
 @EnableAutoConfiguration
@@ -23,9 +25,11 @@ public class BookRentalFee {
     private Book book;
 
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATETIME_PATTERN)
     private ZonedDateTime feeStartDate;
 
     @Null
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATETIME_PATTERN)
     private ZonedDateTime feeEndDate;
 
     @NotNull

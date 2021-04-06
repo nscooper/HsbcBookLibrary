@@ -38,6 +38,10 @@ public class Book {
     private int totalStockedCopies;
 
 
+    @NotNull
+    @Column(name="TOTAL_AVAILABLE_COPIES")
+    private int totalAvailableCopies;
+
     public UUID getId() {
         return id;
     }
@@ -76,5 +80,25 @@ public class Book {
 
     public void setTotalStockedCopies(int totalStockedCopies) {
         this.totalStockedCopies = totalStockedCopies;
+    }
+
+    public int getTotalAvailableCopies() {
+        return totalAvailableCopies;
+    }
+
+    public void setTotalAvailableCopies(int totalAvailableCopies) {
+        this.totalAvailableCopies = totalAvailableCopies;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", isbn='" + isbn + '\'' +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", totalStockedCopies=" + totalStockedCopies +
+                ", totalAvailableCopies=" + totalAvailableCopies +
+                '}';
     }
 }
