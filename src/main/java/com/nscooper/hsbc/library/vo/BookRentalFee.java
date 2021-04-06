@@ -11,9 +11,11 @@ import java.util.UUID;
 
 @Entity
 @EnableAutoConfiguration
+@Table(name = "BOOK_RENTAL_FEE")
 public class BookRentalFee {
 
     @Id
+    @Column(name="ID")
     private UUID id;
 
     @NotNull

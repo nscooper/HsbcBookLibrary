@@ -2,10 +2,11 @@ package com.nscooper.hsbc.library.repo;
 
 import com.nscooper.hsbc.library.exceptions.LibraryException;
 import com.nscooper.hsbc.library.vo.Book;
+import org.springframework.data.repository.CrudRepository;
 
-public interface BookRepository {
+import java.util.UUID;
 
-    public Book addBook(Book book) throws LibraryException;
-    public Book updateBook(Book book) throws LibraryException;
-    public Book getBook(String isbn) throws LibraryException;
+public interface BookRepository extends CrudRepository<Book, UUID> {
+
+    public Book findByIsbn(String isbn) throws LibraryException;
 }
