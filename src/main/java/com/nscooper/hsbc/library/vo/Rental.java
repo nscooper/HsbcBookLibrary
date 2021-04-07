@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static com.nscooper.hsbc.library.config.Configuration.DATETIME_PATTERN;
@@ -33,20 +33,20 @@ public class Rental {
     @ManyToOne(targetEntity=Book.class, fetch= FetchType.EAGER)
     Book book;
 
-    @NotNull
     @Column(name="RENTAL_START_DATE")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATETIME_PATTERN)
-    ZonedDateTime rentalStartDate;
-
     @NotNull
+    LocalDateTime rentalStartDate;
+
     @Column(name="AGREED_RETURN_DATE")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATETIME_PATTERN)
-    ZonedDateTime agreedReturnDate;
-
     @NotNull
+    LocalDateTime agreedReturnDate;
+
     @Column(name="ACTUAL_RETURN_DATE")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATETIME_PATTERN)
-    ZonedDateTime actualReturnedDate;
+    @NotNull
+    LocalDateTime actualReturnedDate;
 
     @Null
     @Column(name="TOTAL_FEE")
@@ -85,27 +85,27 @@ public class Rental {
         this.book = book;
     }
 
-    public ZonedDateTime getRentalStartDate() {
+    public @NotNull LocalDateTime getRentalStartDate() {
         return rentalStartDate;
     }
 
-    public void setRentalStartDate(ZonedDateTime rentalStartDate) {
+    public void setRentalStartDate(@NotNull LocalDateTime rentalStartDate) {
         this.rentalStartDate = rentalStartDate;
     }
 
-    public ZonedDateTime getAgreedReturnDate() {
+    public @NotNull LocalDateTime getAgreedReturnDate() {
         return agreedReturnDate;
     }
 
-    public void setAgreedReturnDate(ZonedDateTime agreedReturnDate) {
+    public void setAgreedReturnDate(@NotNull LocalDateTime agreedReturnDate) {
         this.agreedReturnDate = agreedReturnDate;
     }
 
-    public ZonedDateTime getActualReturnedDate() {
+    public @NotNull LocalDateTime getActualReturnedDate() {
         return actualReturnedDate;
     }
 
-    public void setActualReturnedDate(ZonedDateTime actualReturnedDate) {
+    public void setActualReturnedDate(@NotNull LocalDateTime actualReturnedDate) {
         this.actualReturnedDate = actualReturnedDate;
     }
 

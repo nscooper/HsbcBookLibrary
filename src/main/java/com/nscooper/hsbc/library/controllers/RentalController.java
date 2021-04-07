@@ -14,11 +14,13 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-
-import java.time.ZonedDateTime;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,9 +41,7 @@ public class RentalController {
     public Book addBook(
             @RequestBody BookDto bookDetails,
             final HttpServletRequest req) throws LibraryException {
-
-        logger.info("Started /addBook");
-        logger.info(bookDetails.getIsbn());
+        logger.debug("Started /addBook");
 
         return rentalService.addBook(bookDetails.getIsbn(), bookDetails.getTitle(), bookDetails.getAuthor(), bookDetails.getQuantity());
     }
@@ -127,11 +127,11 @@ public class RentalController {
                 rentalService.getCustomer(rentalDto.getCustomerFirstName(), rentalDto.getCustomerLastName());
 
         Book book = rentalService.getBook(rentalDto.getIsbn());
-        if (book.getTotalAvailableCopies()<1) {
+        if (book != null && book.getTotalAvailableCopies()<1) {
             throw new LibraryException(String.format("Book '%s' by %s is unavailable",book.getTitle(), book.getAuthor()));
         }
 
-        ZonedDateTime endRentalDate = ZonedDateTime
+        @NotNull LocalDateTime endRentalDate = LocalDateTime
                 .now()
                 .plusDays( Long.parseLong(rentalDto.getNumberOfDaysRental()) );
         return rentalService.rentBook(customer, book, endRentalDate);
@@ -149,11 +149,11 @@ public class RentalController {
 
     @ApiOperation("get customers rentals")
     @PostMapping(consumes= APPLICATION_JSON_VALUE, produces=APPLICATION_JSON_VALUE,
-            path = "/getRental")
+            path = "/getRentals")
     public List<Rental> getRental(
             @RequestBody RentalDto rentalDto,
             final HttpServletRequest req) throws LibraryException {
-        logger.debug("Started /getRental");
+        logger.debug("Started /getRentals");
 
        return rentalService.getRentals(
                rentalService.getCustomer(rentalDto.getCustomerFirstName(), rentalDto.getCustomerLastName()));

@@ -16,7 +16,7 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -87,7 +87,7 @@ public class RentalServiceImpl implements RentalService{
         BookRentalFee bookRentalFee = getCurrentRentalFee(rental.getBook().getIsbn());
         Book book = rental.getBook();
 
-        ZonedDateTime actualReturnDate =  ZonedDateTime.now();
+        @javax.validation.constraints.NotNull LocalDateTime actualReturnDate =  LocalDateTime.now();
         rental.setActualReturnedDate(actualReturnDate);
         long multiplier = Duration.between( rental.getRentalStartDate(), actualReturnDate ).toDays();
         rental.setTotalFee(bookRentalFee.getDailyFee().multiply(new BigDecimal(multiplier)).setScale(2, RoundingMode.UP));
@@ -126,7 +126,7 @@ public class RentalServiceImpl implements RentalService{
 
     @Override
     @Transactional
-    public Rental rentBook(Customer customer, Book book, ZonedDateTime returnDate) throws LibraryException {
+    public Rental rentBook(Customer customer, Book book, @javax.validation.constraints.NotNull LocalDateTime returnDate) throws LibraryException {
 
         BookRentalFee bookRentalFee = getCurrentRentalFee(book.getIsbn());
 
@@ -135,10 +135,10 @@ public class RentalServiceImpl implements RentalService{
         rental.setRentalAgreementReference(UUID.randomUUID());
         rental.setCustomer(customer);
         rental.setBook(book);
-        rental.setRentalStartDate(ZonedDateTime.now());
+        rental.setRentalStartDate(LocalDateTime.now());
         rental.setAgreedReturnDate(returnDate);
 
-        long multiplier = Duration.between( ZonedDateTime.now() , returnDate ).toDays();
+        long multiplier = Duration.between( LocalDateTime.now() , returnDate ).toDays();
         rental.setTotalFee(bookRentalFee.getDailyFee().multiply(new BigDecimal(multiplier)));
 
         rentalRepository.save(rental);
@@ -172,17 +172,17 @@ public class RentalServiceImpl implements RentalService{
             bookRentalFee = new BookRentalFee();
             bookRentalFee.setId(UUID.randomUUID());
             bookRentalFee.setBook(book);
-            bookRentalFee.setFeeStartDate(ZonedDateTime.now());
+            bookRentalFee.setFeeStartDate(LocalDateTime.now());
             bookRentalFee.setFeeEndDate(null);
         } else {
             bookRentalFee.setBook(book);
-            bookRentalFee.setFeeEndDate(ZonedDateTime.now());
+            bookRentalFee.setFeeEndDate(LocalDateTime.now());
             bookRentalFeeRepository.save(bookRentalFee);
 
             bookRentalFee = new BookRentalFee();
             bookRentalFee.setId(UUID.randomUUID());
             bookRentalFee.setBook(book);
-            bookRentalFee.setFeeStartDate(ZonedDateTime.now());
+            bookRentalFee.setFeeStartDate(LocalDateTime.now());
             bookRentalFee.setFeeEndDate(null);
         }
 

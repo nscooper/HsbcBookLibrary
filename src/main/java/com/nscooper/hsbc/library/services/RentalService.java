@@ -5,9 +5,9 @@ import com.nscooper.hsbc.library.vo.Book;
 import com.nscooper.hsbc.library.vo.BookRentalFee;
 import com.nscooper.hsbc.library.vo.Customer;
 import com.nscooper.hsbc.library.vo.Rental;
-import org.json.JSONObject;
 
-import java.time.ZonedDateTime;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +23,7 @@ public interface RentalService {
     public List<BookRentalFee> getRentalFee(String isbn) throws LibraryException;
     public BookRentalFee getCurrentRentalFee(String isbn) throws LibraryException;
 
-    public Rental rentBook(Customer customer, Book book, ZonedDateTime returnDate) throws LibraryException;
+    public Rental rentBook(Customer customer, Book book, @NotNull LocalDateTime returnDate) throws LibraryException;
     public Rental returnBook(UUID rentalAgreementReference) throws LibraryException;
 
     List<Rental> getRentals(Customer customer) throws LibraryException;
