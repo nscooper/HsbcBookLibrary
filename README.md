@@ -35,7 +35,7 @@ curl --header "Content-Type: application/json" --request POST --data '{"firstNam
 
 curl --header "Content-Type: application/json" --request POST --data '{"isbn":"9876","title":"goodbye","author":"me","quantity":"1"}' http://localhost:8080/library/addBook
 
-curl --header "Content-Type: application/json" --request POST --data '{"isbn":"9876"}' http://localhost:8080/library/addBook
+curl --header "Content-Type: application/json" --request POST --data '{"isbn":"9876"}' http://localhost:8080/library/getBook
 
 curl --header "Content-Type: application/json" --request POST --data '{"isbn": "9876", "dailyFee":"2.99"}' http://localhost:8080/library/addRentalFee
 

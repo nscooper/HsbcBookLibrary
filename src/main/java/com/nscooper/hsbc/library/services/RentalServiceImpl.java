@@ -84,8 +84,12 @@ public class RentalServiceImpl implements RentalService{
         if (rental==null){
             throw new LibraryException(String.format("No rental agreement found with reference:%s.", rentalAgreementReference));
         }
-        BookRentalFee bookRentalFee = getCurrentRentalFee(rental.getBook().getIsbn());
         Book book = rental.getBook();
+        BookRentalFee bookRentalFee = getCurrentRentalFee(rental.getBook().getIsbn());
+        if (bookRentalFee==null){
+            throw new LibraryException(String.format("No current book fee available, for book with ISBN: :%s.",
+                    book.getIsbn()));
+        }
 
         @javax.validation.constraints.NotNull LocalDateTime actualReturnDate =  LocalDateTime.now();
         rental.setActualReturnedDate(actualReturnDate);
@@ -129,6 +133,10 @@ public class RentalServiceImpl implements RentalService{
     public Rental rentBook(Customer customer, Book book, @javax.validation.constraints.NotNull LocalDateTime returnDate) throws LibraryException {
 
         BookRentalFee bookRentalFee = getCurrentRentalFee(book.getIsbn());
+        if (bookRentalFee==null){
+            throw new LibraryException(String.format("No current book fee available, for book with ISBN: :%s.",
+                    book.getIsbn()));
+        }
 
         Rental rental = new Rental();
         rental.setId(UUID.randomUUID());
